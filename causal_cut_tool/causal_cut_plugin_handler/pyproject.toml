@@ -1,0 +1,16 @@
+[project]
+name = "causal_cut_plugin_handler"
+description = "Handles custom user data for the causal-cut-tool"
+requires-python = ">=3.10"
+dynamic = ["version"]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+dependencies = [
+    "importlib-metadata"
+]
+
+[tool.setuptools.packages.find]
+exclude = ["tmp*"]

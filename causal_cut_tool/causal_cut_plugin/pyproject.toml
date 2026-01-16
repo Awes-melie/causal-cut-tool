@@ -1,0 +1,18 @@
+[project]
+name = "causal_cut_plugin"
+description = "Plugin for causal cut testing tool"
+requires-python = ">=3.10"
+dynamic = ["version"]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+exclude = ["tmp*"]
+
+[project.entry-points."causal_cut_tool.runtime_data"]
+runtime_data = "causal_cut_plugin:example_runtime_data"
+
+[project.entry-points."causal_cut_tool.parameters"]
+parameters = "causal_cut_plugin:example_parameters"
