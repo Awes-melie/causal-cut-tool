@@ -13,3 +13,6 @@ exclude = ["tmp*"]
 
 [project.entry-points."causal_cut_tool.run"]
 run = "causal_cut_plugin:run"
+
+[project.entry-points."causal_cut_tool.find_faults"]
+find_faults = "causal_cut_plugin:find_faults"
