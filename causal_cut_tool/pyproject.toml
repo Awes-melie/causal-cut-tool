@@ -10,3 +10,6 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 exclude = ["tmp*"]
+
+[project.scripts]
+causal-cut = "causal_cut_tool:run_g_estimation"

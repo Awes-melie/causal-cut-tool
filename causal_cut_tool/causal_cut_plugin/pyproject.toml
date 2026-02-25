@@ -11,8 +11,5 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 exclude = ["tmp*"]
 
-[project.entry-points."causal_cut_tool.runtime_data"]
-runtime_data = "causal_cut_plugin:example_runtime_data"
-
-[project.entry-points."causal_cut_tool.parameters"]
-parameters = "causal_cut_plugin:example_parameters"
+[project.entry-points."causal_cut_tool.run"]
+run = "causal_cut_plugin:run"
