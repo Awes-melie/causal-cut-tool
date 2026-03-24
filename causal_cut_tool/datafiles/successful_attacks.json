@@ -1,34 +1,12 @@
 [{
+  "attack_id": 12,
   "attack": [
-    [225, "bolus", 1],
-    [275, "bolus", 1],
-    [290, "bolus", 1]
+    [225, "variable1", 1],
+    [275, "variable1", 1],
+    [290, "variable1", 1]
   ],
   "timesteps": 499,
   "fault_time": 298,
-  "outcome": "Value",
-  "constants": [0.009333173555431062, 0.9118273275730961, 0.31090926619124715, 0.8784659075496285, 0.017524117957138596, 0.00016832444307779415, 0.06927834938376665, 72, 0.000573617008073235, 0.9734144344140921, 0.944322095821048, 9.041258639383047],
-  "failure": "Low",
-  "initial_carbs": 50.19039999999999,
-  "initial_bg": 178.0,
-  "initial_iob": 8.599,
-  "minimal": [
-    [225, "bolus", 1],
-    [275, "bolus", 1],
-    [290, "bolus", 1]
-  ],
-  "spurious": [],
-  "fault_revealing": true,
-  "attack_id": 2,
-  "greedy_minimal": [
-    [225, "bolus", 45],
-    [275, "bolus", 45],
-    [290, "bolus", 45]
-  ],
-  "ddmin": [
-    [225, "bolus", 1],
-    [275, "bolus", 1],
-    [290, "bolus", 1]
-  ],
-  "ddmin_executions": 7
+  "outcome": "sensor1",
+  "failure": "Low"
 }]

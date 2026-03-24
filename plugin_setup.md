@@ -1,5 +1,6 @@
 # How to Use the Causal Cut Tool
-The causal cut tool can be used to TODO
+The causal-cut tool can be used to generate a reduced set of test cases by using causal inference
+to estimate the contribution of each intervention from pre-existing runtime data.
 ## Running the system
 The causal cut tool can be run using `uv` from the `causal_cut_tool` directory with the command:
 `uv run bash ./causal_cut.sh [PATH TO DATAFILE].pqt`

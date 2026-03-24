@@ -12,9 +12,5 @@ running:
 
 ## Adapting the tool
 In order to run your system using the tool, you will need to allow the tool to call a method that can run your system 
-(or model of your system). This can be done in the causal_cut_plugin directory. Details about the implementation needed
-can be found in the tutorial.ipynb file along with information about the data that needs to be provided.
-
-TODO:
-- Descriptions of datafiles
-- Strip down datafiles
+(or model of your system). This can be done in the causal_cut_plugin directory. Details about the python implementation needed
+can be found in the [tutorial page](plugin_setup.md) along with information about the data that needs to be provided.
