@@ -1,12 +1,12 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools<=81", "setuptools_scm[toml]>=6.2", "wheel"]
+
 [project]
 name = "causal_cut_plugin"
 description = "Plugin for causal cut testing tool"
 requires-python = ">=3.10"
 dynamic = ["version"]
-
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 exclude = ["tmp*"]

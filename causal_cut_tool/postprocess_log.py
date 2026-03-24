@@ -4,7 +4,8 @@ from itertools import product
 
 import pandas as pd
 
-from causal_cut_tool.fault_finding import reproduce_fault
+from args_interface import get_args
+from fault_finding import reproduce_fault
 
 
 def build_attack(attack: dict):
@@ -59,18 +60,71 @@ def build_attack(attack: dict):
         ):
             interventions.append(attack["attack"][treatment_strategy["intervention_index"]])
 
-    still_fault, _ = reproduce_fault(attack, timesteps=499, interventions=interventions, constants=attack["constants"],)
+    still_fault, _ = reproduce_fault(attack, timesteps=499, interventions=interventions, constants=attack["constants"])
 
-    # TODO continue importing postprocessing behaviour
+    attack["pure_estimate_fault"] = still_fault
+    attack["estimated_interventions"] = list(interventions)
+
+    simulator_runs = 1
+
+    interventions_to_add = list(treatment_strategies["intervention_index"])
+    while not still_fault and interventions_to_add:
+        # interventions must match format
+        next_intervention = attack["attack"][interventions_to_add.pop(0)]
+        if next_intervention in interventions:
+            continue
+        interventions.append(next_intervention)
+        still_fault, _ = reproduce_fault(attack, timesteps=499, interventions=interventions, constants=attack["constants"])
+
+    interventions.sort()
+    attack["extended_estimate_fault"] = still_fault
+    attack["extended_interventions"] = list(interventions)
+    attack["simulator_runs"] = simulator_runs
+
+    # Apply the greedy heuristic to the tool-minimised trace
+    for intervention in sorted(attack["estimated_interventions"]):
+        simulator_runs += 1
+        still_fault, _ = reproduce_fault(attack,
+                                         timesteps=499,
+                                         interventions=[i for i in interventions if i != intervention],
+                                         constants=attack["constants"])
+        if still_fault:
+            interventions.remove(intervention)
+    attack["reduced_extended_interventions"] = list(interventions)
+    attack["reduced_simulator_runs"] = simulator_runs
+
+    # Further minimise the trace by considering all combinations of the remaining interventions, starting with the
+    # minimum number of interventions and gradually working back up.
+    # Don't do this for attacks longer than 20 because it's too expensive
+    if len(attack["attack"]) > 20:
+        return attack
+    minimal = dict(enumerate(interventions))
+    minimal_keys = sorted(list(minimal.keys()))
+    combinatorial_sim_runs = 0
+    for mask in sorted(list(product([0, 1], repeat=len(minimal))), key=sum)[1:]:
+        candidate = [minimal[k] for m, k in zip(mask, minimal_keys) if m]
+        still_fault, _ = reproduce_fault(attack,
+                                         timesteps=499,
+                                         interventions=candidate,
+                                         constants=attack["constants"])
+        combinatorial_sim_runs += 1
+        if still_fault:
+            minimal = candidate
+            break
+
+    attack["minimised_extended_interventions"] = minimal
+    attack["combinatorial_sim_runs"] = combinatorial_sim_runs
+    attack["greedy_minimal"] = attack["minimal"]
+
+    return attack
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        raise ValueError("Please provide a JSON log file to process.")
+    args = get_args()
 
-    print(sys.argv[1])
-    with open(sys.argv[1]) as f:
+    print(args.outfile)
+    with open(args.outfile) as f:
         attacks = json.load(f)
 
     processed_attacks = list(map(build_attack, sorted(attacks, key=lambda a: a["attack_index"])))
-    with open(sys.argv[1], "w") as f:
+    with open(args.outfile, "w") as f:
         json.dump(processed_attacks, f)

@@ -14,7 +14,7 @@ from causal_testing.testing.causal_test_outcome import SomeEffect
 from causal_testing.testing.base_test_case import BaseTestCase
 from causal_testing.testing.causal_test_adequacy import DataAdequacy
 
-from g_estimation_interface import get_args
+from args_interface import get_args
 
 def run_g_estimation():
     args = get_args()

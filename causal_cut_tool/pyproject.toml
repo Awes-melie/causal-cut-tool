@@ -1,15 +1,28 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = ["setuptools<=81", "setuptools_scm[toml]>=6.2", "wheel"]
+
 [project]
 name = "causal_cut_tool"
 description = "Implementation of causal cut tool for cyber-digital system testing"
 requires-python = ">=3.10"
 dynamic = ["version", "dependencies"]
 
-[build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
-
 [tool.setuptools.packages.find]
 exclude = ["tmp*"]
+
+[tool.uv.workspace]
+members = [
+    ".",
+]
+
+[tool.uv.sources]
+causal-cut-tool = { workspace = true, editable = true }
+
+[dependency-groups]
+dev = [
+    "causal-cut-tool",
+]
 
 [project.scripts]
 causal-cut = "causal_cut_tool:run_g_estimation"

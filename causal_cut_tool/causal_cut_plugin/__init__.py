@@ -1,13 +1,11 @@
+from typing import Any
+
 import matplotlib.pyplot as plt
 import pandas as pd
-from dataclasses import dataclass
 from aps_digitaltwin.model import Model
 from aps_digitaltwin.openaps import OpenAPS
 from aps_digitaltwin.util import s_label, j_label, l_label, g_label, i_label, BOLUS, BASAL_BOLUS_THRESHOLD
 from aps_digitaltwin.util import LOW, HIGH, BASAL_BOLUS_THRESHOLD, BOLUS, SNACK, LIGHT_MEAL, HEAVY_MEAL, constant_names
-
-def initial_values(self):
-    return [initial_carbs, initial_jej, initial_il, initial_bg, initial_iob]
 
 def _plot(df, timesteps):
     fig, (ax1, ax2) = plt.subplots(1, 2)
@@ -26,8 +24,9 @@ def run_control(
     timesteps_per_intervention: int,
     plot=False,
     kill_at_fault=False,
+    initial_values=None,
 ):
-    model_control = Model(initial_values(), constants)
+    model_control = Model(initial_values, constants)
 
     for intervention in interventions:
         model_control.add_intervention(intervention[0], intervention[1], intervention[2])
@@ -53,28 +52,25 @@ def run(
     timesteps: int,
     interventions: list,
     constants: list,
-    recorded_carbs=None,
     plot=False,
     model_control=False,
     tempdir="openaps_temp",
-    profile_path=None,
-    basal_profile_path=None,
     kill_at_fault=False,
     timesteps_per_intervention=5,
 ):
-    initial_carbs = attack["initial_carbs"],
-    initial_bg = attack["initial_bg"],
-    initial_iob = attack["initial_iob"],
+
+    initial_values: list[float] = [attack["initial_carbs"], 0, 0, attack["initial_bg"], attack["initial_iob"]]
 
     if model_control:
         control_df = run_control(constants,
                                  plot=plot,
                                  kill_at_fault=kill_at_fault,
                                  timesteps=timesteps,
-                                 timesteps_per_intervention=timesteps_per_intervention)
+                                 timesteps_per_intervention=timesteps_per_intervention,
+                                 initial_values=initial_values)
 
-    open_aps = OpenAPS(recorded_carbs, profile_path=profile_path, basal_profile_path=basal_profile_path)
-    model_openaps = Model(initial_values(), constants, interventions=interventions)
+    open_aps = OpenAPS(None, profile_path=None, basal_profile_path=None)
+    model_openaps = Model(initial_values, constants, interventions=interventions)
 
     fault = False
     for t in range(1, timesteps + 1):
